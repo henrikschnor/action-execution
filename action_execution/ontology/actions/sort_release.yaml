@@ -1,0 +1,7 @@
+# Description: Defines an action for releasing an object
+#              close to other objects of the same class
+# Author: Alex Mitrevski
+# Email: aleksandar.mitrevski@h-brs.de
+action_id: sort_release
+instance_of: [release]
+execution_models: [sort_release]

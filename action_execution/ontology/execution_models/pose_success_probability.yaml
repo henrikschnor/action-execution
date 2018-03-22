@@ -1,0 +1,15 @@
+# Description: Defines a model for combining
+# Author: Alex Mitrevski
+# Email: aleksandar.mitrevski@h-brs.de
+model_id: pose_success_probability
+inputs:
+    - input:
+        name: candidates_and_probabilities
+        type: dict[]
+outputs:
+    - output:
+        name: candidate_poses
+        type: pose3d[]
+    - output:
+        name: success_probabilities
+        type: float[]

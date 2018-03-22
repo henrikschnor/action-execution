@@ -1,0 +1,6 @@
+# Description: Defines an object release action
+# Author: Alex Mitrevski
+# Email: aleksandar.mitrevski@h-brs.de
+action_id: release
+instance_of: [place]
+execution_models: [proximity]

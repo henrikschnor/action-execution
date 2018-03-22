@@ -1,0 +1,28 @@
+# Description: Defines a reachability model
+# Author: Alex Mitrevski
+# Email: aleksandar.mitrevski@h-brs.de
+model_id: reachability
+inputs:
+    - input:
+        name: frame_id
+        type: str
+    - input:
+        name: manipulated_object
+        type: Object3d
+    - input:
+        name: surface
+        type: Object3d
+    - input:
+        name: objects_on_surface
+        type: Object3d[]
+outputs:
+    - output:
+        name: candidate_poses
+        type: pose3d[]
+    - output:
+        name: success_probabilities
+        type: float[]
+params:
+    - param:
+        name: arm
+        type: str

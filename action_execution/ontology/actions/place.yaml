@@ -1,0 +1,10 @@
+# Description: Defines a placing action
+# Author: Alex Mitrevski
+# Email: aleksandar.mitrevski@h-brs.de
+action_id: place
+capabilities: [manipulation, navigation, perception]
+known_failure_cases: [knocking_objects_over, object_falls_over, unreachable_manipulation_pose]
+execution_models: [free_space]
+sequence_models: True
+combination_model: pose_success_probability
+output_model: reachability_checker

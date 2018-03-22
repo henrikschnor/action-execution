@@ -1,0 +1,22 @@
+# Description: Defines a model for checking the reachability of a given set of poses
+# Author: Alex Mitrevski
+# Email: aleksandar.mitrevski@h-brs.de
+model_id: reachability_checker
+inputs:
+    - input:
+        name: frame_id
+        type: str
+    - input:
+        name: pose_candidate_dict
+        type: dict[]
+outputs:
+    - output:
+        name: pose_candidate
+        type: Pose3d
+    - output:
+        name: pose_candidate_idx
+        type: int
+params:
+    - param:
+        name: arm
+        type: str
