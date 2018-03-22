@@ -25,7 +25,7 @@ class PathConfig(object):
     Email -- aleksandar.mitrevski@h-brs.de
 
     '''
-    DIR_ABS_PATH = '/home/alex/git_repos/phd-code/action_execution'
+    DIR_ABS_PATH = '<absolute-path-of-action_execution>'
     ACTION_CONFIG_PATH = 'ontology/actions'
     FAILURE_CASE_CONFIG_PATH = 'ontology/failure_cases'
     MODEL_CONFIG_PATH = 'ontology/execution_models'
