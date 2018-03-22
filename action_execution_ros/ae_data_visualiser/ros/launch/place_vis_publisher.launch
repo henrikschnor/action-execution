@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="ae_data_visualiser" type="place_vis_publisher" name="place_data_visualisation_publisher" ns="/ae" output="screen">
+        <param name="action_data_query_topic" value="action_data_query" />
+        <param name="marker_topic_root" value="place" />
+    </node>
+</launch>

@@ -1,0 +1,64 @@
+models:
+    - model:
+        name: diningroom_table
+        type: diningroom_table
+        frame_id: odom_combined
+        pose:
+            position:
+                x: -1.0
+                y: 0.0
+                z: 0.4
+            orientation:
+                x: 1.57
+                y: 0.0
+                z: 1.57
+        scale:
+            x: 1.0
+            y: 1.0
+            z: 1.0
+        color:
+            r: 0.2
+            g: 0.2
+            b: 0.2
+    - model:
+        name: ketchup_bottle1
+        type: ketchup_bottle
+        frame_id: odom_combined
+        pose:
+            position:
+                x: -0.75
+                y: -0.25
+                z: 0.75
+            orientation:
+                x: 1.57
+                y: 0.0
+                z: 0.0
+        scale:
+            x: 0.0059
+            y: 0.0059
+            z: 0.0059
+        color:
+            r: 0.8
+            g: 0.0
+            b: 0.0
+    - model:
+        name: ketchup_bottle2
+        type: ketchup_bottle
+        frame_id: odom_combined
+        pose:
+            position:
+                x: -0.75
+                y: 0.05
+                z: 0.75
+            orientation:
+                x: 1.57
+                y: 0.0
+                z: 0.0
+        scale:
+            x: 0.0059
+            y: 0.0059
+            z: 0.0059
+        color:
+            r: 0.8
+            g: 0.0
+            b: 0.0

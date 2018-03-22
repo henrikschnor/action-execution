@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="ae_test_scenario_visualiser" type="test_scenario_visualiser" name="test_scenario_visualisation_publisher" ns="/ae" output="screen">
+        <param name="scenario_file" value="$(find ae_test_scenarios)/common/scenarios/$(optenv TEST_SCENARIO !!NO_TEST_SCENARIO_SET!!).yaml" />
+        <param name="model_topic" value="scenario_3d_models" />
+        <param name="mesh_location" value="package://mcr_gazebo_worlds/common/objects/models/" />
+        <param name="model_file_extension" value=".dae" />
+    </node>
+</launch>

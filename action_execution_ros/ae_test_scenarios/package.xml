@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ae_test_scenarios</name>
+  <version>0.0.1</version>
+  <description>A package for defining test scenario files</description>
+
+  <author email="aleksandar.mitrevski@h-brs.de">Alex Mitrevski</author>
+  <maintainer email="aleksandar.mitrevski@h-brs.de">Alex Mitrevski</maintainer>
+  <license>GPLv3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>

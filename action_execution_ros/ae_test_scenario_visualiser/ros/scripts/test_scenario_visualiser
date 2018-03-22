@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+'''
+    Copyright 2018 by Alex Mitrevski <aleksandar.mitrevski@h-brs.de>
+
+    This file is part of action-execution.
+
+    action-execution is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    action-execution is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with action-execution. If not, see <http://www.gnu.org/licenses/>.
+'''
+
+import yaml
+
+import rospy
+from visualization_msgs.msg import Marker, MarkerArray
+
+from action_execution.extern.transformations import quaternion_from_euler
+
+class TestScenarioVisualisationPublisher(object):
+    def __init__(self):
+        self.scenario_file = rospy.get_param('~scenario_file', '')
+        self.model_topic = rospy.get_param('~model_topic', '/ae/scenario_3d_models')
+        self.mesh_location = rospy.get_param('~mesh_location', '')
+        self.model_file_extension = rospy.get_param('~model_file_extension', '.dae')
+        model_publisher = rospy.Publisher(self.model_topic, MarkerArray,
+                                          queue_size=100, latch=True)
+
+        scenario_file = open(self.scenario_file, 'r')
+        model_config = yaml.load(scenario_file)
+        scenario_file.close()
+
+        marker_counter = 0
+        model_list = MarkerArray()
+        for model in model_config['models']:
+            model = model['model']
+            marker = Marker()
+            marker.header.seq = marker_counter
+            marker.id = marker_counter
+            marker.ns = '/ae'
+            marker.type = Marker.MESH_RESOURCE
+            marker.mesh_resource = self.mesh_location + model['type'] + '.stl'
+            marker.action = Marker.ADD
+
+            marker.header.frame_id = model['frame_id']
+            marker.pose.position.x = model['pose']['position']['x']
+            marker.pose.position.y = model['pose']['position']['y']
+            marker.pose.position.z = model['pose']['position']['z']
+
+            quat_list = quaternion_from_euler(model['pose']['orientation']['z'],
+                                              model['pose']['orientation']['y'],
+                                              model['pose']['orientation']['x'])
+            marker.pose.orientation.x = quat_list[0]
+            marker.pose.orientation.y = quat_list[1]
+            marker.pose.orientation.z = quat_list[2]
+            marker.pose.orientation.w = quat_list[3]
+
+            marker.scale.x = model['scale']['x']
+            marker.scale.y = model['scale']['y']
+            marker.scale.z = model['scale']['z']
+
+            marker.color.r = model['color']['r']
+            marker.color.g = model['color']['g']
+            marker.color.b = model['color']['b']
+            marker.color.a = 1.
+            model_list.markers.append(marker)
+            marker_counter += 1
+        model_publisher.publish(model_list)
+
+    def spin(self, frequency):
+        rate = rospy.Rate(frequency)
+        while not rospy.is_shutdown():
+            rate.sleep()
+
+if __name__ == '__main__':
+    rospy.init_node('test_scenario_visualisation_publisher')
+    node = TestScenarioVisualisationPublisher()
+    node.spin(10)
