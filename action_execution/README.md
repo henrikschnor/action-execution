@@ -88,6 +88,15 @@ action_execution
 
 ```
 
+## Usage
+
+There is currently no installation script for the package, so the following steps need to be taken to use the module:
+1. Add the path of the module's parent directory to the `PYTHONPATH` environment variable:
+```
+export PYTHONPATH=<path-to-action-execution-repository>:$PYTHONPATH
+```
+2. In `config_keys.py`, assign the `DIR_ABS_PATH` variable - defined in `PathConfig` - to the location of this module
+
 ## Example usage
 
 Examples of invoking the action execution interface and the individual execution models can be found in the `tests` subdirectory. ROS-based examples of visualising the collected execution data for debugging the execution models can be found [here](../action_execution_ros).
