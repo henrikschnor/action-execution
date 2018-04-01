@@ -38,12 +38,12 @@ class ConverterFactory(object):
         msg -- a ros message
 
         '''
-        if type(msg).__name__.lower() == 'pose3':
-            return PoseStampedConverter.convert_to_ros_msg(msg)
-        elif type(msg).__name__.lower() == 'bbox3':
-            return BoundingBoxConverter.convert_to_ros_msg(msg)
-        elif type(msg).__name__.lower() == 'object3d':
-            return ObjectConverter.convert_to_ros_msg(msg)
+        if type(obj).__name__.lower() == 'pose3':
+            return PoseStampedConverter.convert_to_ros_msg(obj)
+        elif type(obj).__name__.lower() == 'bbox3':
+            return BoundingBoxConverter.convert_to_ros_msg(obj)
+        elif type(obj).__name__.lower() == 'object3d':
+            return ObjectConverter.convert_to_ros_msg(obj)
 
         rospy.loginfo('[ConverterFactory] Unknown type; ignoring request')
         return None
