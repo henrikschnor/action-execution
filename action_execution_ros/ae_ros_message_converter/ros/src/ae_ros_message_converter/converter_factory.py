@@ -11,7 +11,7 @@ class ConverterFactory(object):
         pass
 
     @staticmethod
-    def convert(msg):
+    def convert_ros_msg(msg):
         '''Converts 'msg' to an appropriate type if it is a known message;
         returns None otherwise.
 
@@ -20,11 +20,11 @@ class ConverterFactory(object):
 
         '''
         if type(msg).__name__.lower() == 'posestamped':
-            return PoseStampedConverter.convert(msg)
+            return PoseStampedConverter.convert_ros_msg(msg)
         elif type(msg).__name__.lower() == 'boundingbox':
-            return BoundingBoxConverter.convert(msg)
+            return BoundingBoxConverter.convert_ros_msg(msg)
         elif type(msg).__name__.lower() == 'object':
-            return ObjectConverter.convert(msg)
+            return ObjectConverter.convert_ros_msg(msg)
 
         rospy.loginfo('[ConverterFactory] Unknown message type; ignoring request')
         return None
