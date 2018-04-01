@@ -28,3 +28,22 @@ class ConverterFactory(object):
 
         rospy.loginfo('[ConverterFactory] Unknown message type; ignoring request')
         return None
+
+    @staticmethod
+    def convert_to_ros_msg(obj):
+        '''Converts 'obj' to an appropriate message if it is a known type;
+        returns None otherwise.
+
+        Keyword:
+        msg -- a ros message
+
+        '''
+        if type(msg).__name__.lower() == 'pose3':
+            return PoseStampedConverter.convert_to_ros_msg(msg)
+        elif type(msg).__name__.lower() == 'bbox3':
+            return BoundingBoxConverter.convert_to_ros_msg(msg)
+        elif type(msg).__name__.lower() == 'object3d':
+            return ObjectConverter.convert_to_ros_msg(msg)
+
+        rospy.loginfo('[ConverterFactory] Unknown type; ignoring request')
+        return None
