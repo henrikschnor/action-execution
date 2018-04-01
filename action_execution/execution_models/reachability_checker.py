@@ -46,7 +46,7 @@ class ReachabilityCheckerModel(ExecutionModelBase):
         pose_candidate = None
         reachable_pose_found = False
         pose_candidate_idx = 0
-        while not reachable_pose_found and pose_counter <= len(self.pose_candidates):
+        while not reachable_pose_found and pose_candidate_idx <= len(self.pose_candidates):
             candidate = self.pose_candidates[pose_candidate_idx]
 
             pose = PoseStamped()
