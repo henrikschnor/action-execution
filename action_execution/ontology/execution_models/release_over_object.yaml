@@ -1,0 +1,21 @@
+# Description: Defines a model for releasing an object over another one
+# Author: Alex Mitrevski
+# Email: aleksandar.mitrevski@h-brs.de
+model_id: release_over_object
+inputs:
+    - input:
+        name: frame_id
+        type: str
+    - input:
+        name: manipulated_object
+        type: Object3d
+    - input:
+        name: target_object
+        type: Object3d
+outputs:
+    - output:
+        name: candidate_poses
+        type: pose3d[]
+    - output:
+        name: success_probabilities
+        type: float[]

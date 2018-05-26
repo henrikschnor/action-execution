@@ -101,6 +101,7 @@ class ExecutionConfigKeys(object):
     MANIPULATED_OBJECT = 'manipulated_object'
     OBJECTS_ON_SURFACE = 'objects_on_surface'
     SURFACE = 'surface'
+    TARGET_OBJECT = 'target_object'
     ROBOT_POSE = 'robot_pose'
     ARM = 'arm'
 
@@ -126,7 +127,8 @@ MODEL_CLASS_MAPPING = {'free_space': 'FreeSpaceModel',
                        'storing': 'StoringModel',
                        'reachability': 'ReachabilityModel',
                        'pose_success_probability': 'PoseSuccessProbabilityModel',
-                       'reachability_checker': 'ReachabilityCheckerModel'}
+                       'reachability_checker': 'ReachabilityCheckerModel',
+                       'release_over_object': 'ReleaseOverObjectModel'}
 
 OBJ_MODULE_MAPPING = {'Pose2': 'geometry.pose',
                       'Pose3': 'geometry.pose',
