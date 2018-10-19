@@ -86,7 +86,7 @@ class ReachabilityModel(ExecutionModelBase):
             pose.pose.position.y = position.y
 
             # TODO: change this to something that makes more sense
-            pose.pose.position.z = self.surface.bbox.max.z + 0.1
+            pose.pose.position.z = self.surface.pose.position.z + 0.1
 
             quaternion = quaternion_from_euler(obj_copy.pose.orientation.x,
                                                obj_copy.pose.orientation.y,
@@ -113,7 +113,7 @@ class ReachabilityModel(ExecutionModelBase):
             if reachable:
                 position = Vector3(position.x,
                                    position.y,
-                                   obj_copy.bbox.min.z)
+                                   self.surface.pose.position.z)
                 orientation = Vector3(obj_copy.pose.orientation.x,
                                       obj_copy.pose.orientation.y,
                                       z_orientation)

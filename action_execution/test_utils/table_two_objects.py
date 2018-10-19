@@ -21,6 +21,7 @@ from action_execution.geometry.vector import Vector3
 from action_execution.geometry.bbox import BBox3
 from action_execution.geometry.pose import Pose3
 from action_execution.geometry.object import Object3d
+from action_execution.geometry.plane import Plane
 from action_execution.utils.configuration import Configuration
 
 obj_config = Configuration()
@@ -44,8 +45,7 @@ obj_config.manipulated_obj = Object3d(pose=Pose3(frame_id='odom',
                                       bbox=BBox3(Vector3(-0.164, 0.151, 0.849),
                                                  Vector3(-0.087, 0.229, 1.057)))
 
-obj_config.surface = Object3d(pose=Pose3(frame_id='odom',
-                                         position=Vector3(-1., 0., 0.),
-                                         orientation=Vector3(0., 0., 0.)),
-                              bbox=BBox3(Vector3(-1.3, -0.5, 0.),
-                                         Vector3(-0.7, 0.3, 0.75)))
+obj_config.surface = Plane(pose=Pose3(frame_id='odom',
+                                      position=Vector3(-1., 0., 0.75)),
+                           bbox=BBox3(Vector3(-1.3, -0.5, 0.),
+                                      Vector3(-0.7, 0.3, 0.75)))

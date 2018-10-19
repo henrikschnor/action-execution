@@ -84,7 +84,7 @@ class ProximityModel(ExecutionModelBase):
             # object doesn't collide with any of the objects on the surface
             position = Vector3(position.x,
                                position.y,
-                               obj_copy.bbox.min.z)
+                               self.surface.pose.position.z)
             orientation = Vector3(obj_copy.pose.orientation.x,
                                   obj_copy.pose.orientation.y,
                                   z_orientation)

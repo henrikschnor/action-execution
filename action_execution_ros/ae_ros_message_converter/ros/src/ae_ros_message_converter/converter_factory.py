@@ -20,13 +20,19 @@ class ConverterFactory(object):
 
         '''
         if type(msg).__name__.lower() == 'posestamped':
+            print('[ae_convert_ros_msg] Converting a "geometry_msgs.msg.PoseStamped" object')
             return PoseStampedConverter.convert_ros_msg(msg)
         elif type(msg).__name__.lower() == 'boundingbox':
+            print('[ae_convert_ros_msg] Converting an "mcr_perception_msgs.msg.BoundingBox" object')
             return BoundingBoxConverter.convert_ros_msg(msg)
         elif type(msg).__name__.lower() == 'object':
+            print('[ae_convert_ros_msg] Converting an "mcr_perception_msgs.msg.Object" object')
+            return ObjectConverter.convert_ros_msg(msg)
+        elif type(msg).__name__.lower() == 'plane':
+            print('[ae_convert_ros_msg] Converting an "mcr_perception_msgs.msg.Plane" object')
             return ObjectConverter.convert_ros_msg(msg)
 
-        rospy.loginfo('[ConverterFactory] Unknown message type; ignoring request')
+        rospy.loginfo('[ae_convert_ros_msg] Unknown message type; ignoring request')
         return None
 
     @staticmethod
@@ -35,15 +41,21 @@ class ConverterFactory(object):
         returns None otherwise.
 
         Keyword:
-        msg -- a ros message
+        obj -- an action execution type
 
         '''
         if type(obj).__name__.lower() == 'pose3':
+            print('[ae_convert_to_ros_msg] Converting a "Pose3" object')
             return PoseStampedConverter.convert_to_ros_msg(obj)
         elif type(obj).__name__.lower() == 'bbox3':
+            print('[ae_convert_to_ros_msg] Converting a "BBox3" object')
             return BoundingBoxConverter.convert_to_ros_msg(obj)
         elif type(obj).__name__.lower() == 'object3d':
+            print('[ae_convert_to_ros_msg] Converting a "Object3d" object')
+            return ObjectConverter.convert_to_ros_msg(obj)
+        elif type(obj).__name__.lower() == 'plane':
+            print('[ae_convert_to_ros_msg] Converting a "Plane" object')
             return ObjectConverter.convert_to_ros_msg(obj)
 
-        rospy.loginfo('[ConverterFactory] Unknown type; ignoring request')
+        rospy.loginfo('[ae_convert_to_ros_msg] Unknown type; ignoring request')
         return None

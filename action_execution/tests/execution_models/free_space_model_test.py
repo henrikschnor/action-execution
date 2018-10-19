@@ -32,7 +32,8 @@ from action_execution.config_keys import LoggerConfigKeys
 from action_execution.test_utils.table_two_objects import *
 
 def plot_points(surface, static_obj, poses):
-    surface_corners = surface.get_z_projection().bounds
+    surface_corners = [surface.bbox.min.x, surface.bbox.min.y,
+                       surface.bbox.max.x, surface.bbox.max.y]
     static_obj_corners = list()
     for obj in static_obj:
         static_obj_corners.append(obj.get_z_projection().bounds)

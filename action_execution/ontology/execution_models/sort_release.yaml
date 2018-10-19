@@ -12,7 +12,7 @@ inputs:
         type: Object3d
     - input:
         name: surface
-        type: Object3d
+        type: Plane
     - input:
         name: objects_on_surface
         type: Object3d[]
