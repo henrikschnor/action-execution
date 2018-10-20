@@ -22,24 +22,12 @@ class BoundingBoxConverter(ConverterBase):
         '''
         bbox = BBox3()
 
-        min_vec = Vector3(msg.vertices[0].x, msg.vertices[0].y, msg.vertices[0].z)
-        max_vec = Vector3(msg.vertices[0].x, msg.vertices[0].y, msg.vertices[0].z)
-
-        for vertex in msg.vertices:
-            if vertex.x < min_vec.x:
-                min_vec.x = vertex.x
-            elif vertex.x > max_vec.x:
-                max_vec.x = vertex.x
-
-            if vertex.y < min_vec.y:
-                min_vec.y = vertex.y
-            elif vertex.y > max_vec.y:
-                max_vec.y = vertex.y
-
-            if vertex.z < min_vec.z:
-                min_vec.z = vertex.z
-            elif vertex.z > max_vec.z:
-                max_vec.z = vertex.z
+        min_vec = Vector3(msg.center.x - (msg.dimensions.x / 2.),
+                          msg.center.y - (msg.dimensions.y / 2.),
+                          msg.center.z - (msg.dimensions.z / 2.))
+        max_vec = Vector3(msg.center.x + (msg.dimensions.x / 2.),
+                          msg.center.y + (msg.dimensions.y / 2.),
+                          msg.center.z + (msg.dimensions.z / 2.))
 
         bbox.min = min_vec
         bbox.max = max_vec
@@ -64,23 +52,5 @@ class BoundingBoxConverter(ConverterBase):
         bbox.dimensions.x = obj.max.x - obj.min.x
         bbox.dimensions.y = obj.max.y - obj.min.y
         bbox.dimensions.z = obj.max.z - obj.min.z
-
-        point1 = Point(obj.min.x, obj.min.y, obj.min.z)
-        point2 = Point(obj.min.x, obj.max.y, obj.min.z)
-        point3 = Point(obj.max.x, obj.max.y, obj.min.z)
-        point4 = Point(obj.max.x, obj.min.y, obj.min.z)
-        point5 = Point(obj.min.x, obj.min.y, obj.max.z)
-        point6 = Point(obj.min.x, obj.max.y, obj.max.z)
-        point7 = Point(obj.max.x, obj.max.y, obj.max.z)
-        point8 = Point(obj.max.x, obj.min.y, obj.max.z)
-
-        bbox.vertices.append(point1)
-        bbox.vertices.append(point2)
-        bbox.vertices.append(point3)
-        bbox.vertices.append(point4)
-        bbox.vertices.append(point5)
-        bbox.vertices.append(point6)
-        bbox.vertices.append(point7)
-        bbox.vertices.append(point8)
 
         return bbox
