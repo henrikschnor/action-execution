@@ -31,8 +31,8 @@ class Plane(object):
     '''
     def __init__(self, obj_id='', pose=Pose3(), bbox=BBox3()):
         self.id = obj_id
-        self.pose = pose
-        self.bbox = bbox
+        self.pose = deepcopy(pose)
+        self.bbox = deepcopy(bbox)
 
     def __deepcopy__(self, memo):
         return Plane(self.id, deepcopy(self.pose), deepcopy(self.bbox))

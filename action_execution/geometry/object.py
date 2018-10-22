@@ -33,8 +33,8 @@ class Object3d(object):
                  pose=Pose3(), bbox=BBox3()):
         self.id = obj_id
         self.type = obj_type
-        self.pose = pose
-        self.bbox = bbox
+        self.pose = deepcopy(pose)
+        self.bbox = deepcopy(bbox)
 
     def __deepcopy__(self, memo):
         return Object3d(self.id, self.type, deepcopy(self.pose), deepcopy(self.bbox))
