@@ -6,7 +6,7 @@ from ae_ros_message_converter.converters.converter_base import ConverterBase
 from ae_ros_message_converter.converters.pose_converter import PoseStampedConverter
 from ae_ros_message_converter.converters.bbox_converter import BoundingBoxConverter
 
-from action_execution.geometry.object import Plane
+from action_execution.geometry.plane import Plane
 
 class PlaneConverter(ConverterBase):
     def __init__(self):
