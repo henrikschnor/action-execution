@@ -5,6 +5,7 @@ import rospy
 from ae_ros_message_converter.converters.pose_converter import PoseStampedConverter
 from ae_ros_message_converter.converters.bbox_converter import BoundingBoxConverter
 from ae_ros_message_converter.converters.object_converter import ObjectConverter
+from ae_ros_message_converter.converters.plane_converter import PlaneConverter
 
 class ConverterFactory(object):
     def __init__(self):
@@ -30,7 +31,7 @@ class ConverterFactory(object):
             return ObjectConverter.convert_ros_msg(msg)
         elif type(msg).__name__.lower() == 'plane':
             print('[ae_convert_ros_msg] Converting an "mcr_perception_msgs.msg.Plane" object')
-            return ObjectConverter.convert_ros_msg(msg)
+            return PlaneConverter.convert_ros_msg(msg)
 
         rospy.loginfo('[ae_convert_ros_msg] Unknown message type; ignoring request')
         return None
@@ -55,7 +56,7 @@ class ConverterFactory(object):
             return ObjectConverter.convert_to_ros_msg(obj)
         elif type(obj).__name__.lower() == 'plane':
             print('[ae_convert_to_ros_msg] Converting a "Plane" object')
-            return ObjectConverter.convert_to_ros_msg(obj)
+            return PlaneConverter.convert_to_ros_msg(obj)
 
         rospy.loginfo('[ae_convert_to_ros_msg] Unknown type; ignoring request')
         return None
