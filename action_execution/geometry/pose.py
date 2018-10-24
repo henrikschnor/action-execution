@@ -36,7 +36,7 @@ class Pose2(object):
 
         '''
         self.frame_id = frame_id
-        self.position = position
+        self.position = deepcopy(position)
         self.orientation = orientation
 
     def __deepcopy__(self, memo):
@@ -75,8 +75,8 @@ class Pose3(object):
 
         '''
         self.frame_id = frame_id
-        self.position = position
-        self.orientation = orientation
+        self.position = deepcopy(position)
+        self.orientation = deepcopy(orientation)
 
     def __deepcopy__(self, memo):
         return Pose3(self.frame_id, deepcopy(self.position), deepcopy(self.orientation))

@@ -31,8 +31,8 @@ class BBox3(object):
 
     '''
     def __init__(self, min_values=Vector3(), max_values=Vector3()):
-        self.min = Vector3(min_values.x, min_values.y, min_values.z)
-        self.max = Vector3(max_values.x, max_values.y, max_values.z)
+        self.min = deepcopy(min_values)
+        self.max = deepcopy(max_values)
 
     def __deepcopy__(self, memo):
         return BBox3(deepcopy(self.min), deepcopy(self.max))
