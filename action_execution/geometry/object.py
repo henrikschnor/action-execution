@@ -39,6 +39,26 @@ class Object3d(object):
     def __deepcopy__(self, memo):
         return Object3d(self.id, self.type, deepcopy(self.pose), deepcopy(self.bbox))
 
+    def __str__(self):
+        position_str = '    x: {0}\n    y: {1}\n    z: {2}'.format(self.pose.position.x,
+                                                                   self.pose.position.y,
+                                                                   self.pose.position.z)
+        orientation_str = '    x: {0}\n    y: {1}\n    z: {2}'.format(self.pose.orientation.x,
+                                                                      self.pose.orientation.y,
+                                                                      self.pose.orientation.z)
+        bbox_min_str = '    x: {0}\n    y: {1}\n    z: {2}'.format(self.bbox.min.x,
+                                                                   self.bbox.min.y,
+                                                                   self.bbox.min.z)
+        bbox_max_str = '    x: {0}\n    y: {1}\n    z: {2}'.format(self.bbox.max.x,
+                                                                   self.bbox.max.y,
+                                                                   self.bbox.max.z)
+
+        pose_str = '  position:\n{0}\n  orientation:\n{1}'.format(position_str,
+                                                                  orientation_str)
+        bbox_str = '  min:\n{0}\n  max:\n{1}'.format(bbox_min_str, bbox_max_str)
+        return 'id: {0}\ntype: {1}\npose:\n{2}\nbbox:\n{3}'.format(self.id, self.type,
+                                                                   pose_str, bbox_str)
+
     def rotate_around_z(self, theta):
         '''Rotates the object around the z-axis by an angle 'theta'.
 

@@ -42,6 +42,15 @@ class Pose2(object):
     def __deepcopy__(self, memo):
         return Pose2(self.frame_id, deepcopy(self.position), self.orientation)
 
+    def __str__(self):
+        position_str = '  x: {0}\n  y: {1}'.format(self.position.x,
+                                                   self.position.y)
+        orientation_str = '  x: {0}\n  y: {1}'.format(self.orientation.x,
+                                                      self.orientation.y)
+        return 'frame_id: {0}\nposition:\n{1}\norientation:\n{2}'.format(self.frame_id,
+                                                                         position_str,
+                                                                         orientation_str)
+
     def to_dict(self):
         obj_dict = dict()
 
@@ -80,6 +89,17 @@ class Pose3(object):
 
     def __deepcopy__(self, memo):
         return Pose3(self.frame_id, deepcopy(self.position), deepcopy(self.orientation))
+
+    def __str__(self):
+        position_str = '  x: {0}\n  y: {1}\n  z: {2}'.format(self.position.x,
+                                                             self.position.y,
+                                                             self.position.z)
+        orientation_str = '  x: {0}\n  y: {1}\n  z: {2}'.format(self.orientation.x,
+                                                                self.orientation.y,
+                                                                self.orientation.z)
+        return 'frame_id: {0}\nposition:\n{1}\norientation:\n{2}'.format(self.frame_id,
+                                                                         position_str,
+                                                                         orientation_str)
 
     def to_dict(self):
         obj_dict = dict()

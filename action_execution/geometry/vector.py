@@ -60,6 +60,9 @@ class Vector2(object):
     def __sub__(self, other):
         return Vector2(self.x - other.x, self.y - other.y)
 
+    def __str__(self):
+        return 'x: {0}\ny: {1}'.format(self.x, self.y)
+
     x = property(__get_x, __set_x)
     y = property(__get_y, __set_y)
 
@@ -162,6 +165,9 @@ class Vector3(object):
 
     def __sub__(self, other):
         return Vector3(self.x - other.x, self.y - other.y, self.z - other.z)
+
+    def __str__(self):
+        return 'x: {0}\ny: {1}\nz: {2}'.format(self.x, self.y, self.z)
 
     x = property(__get_x, __set_x)
     y = property(__get_y, __set_y)

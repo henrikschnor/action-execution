@@ -37,6 +37,11 @@ class BBox3(object):
     def __deepcopy__(self, memo):
         return BBox3(deepcopy(self.min), deepcopy(self.max))
 
+    def __str__(self):
+        min_str = '  x: {0}\n  y: {1}\n  z: {2}'.format(self.min.x, self.min.y, self.min.z)
+        max_str = '  x: {0}\n  y: {1}\n  z: {2}'.format(self.max.x, self.max.y, self.max.z)
+        return 'min:\n{0}\nmax:\n{1}'.format(min_str, max_str)
+
     def rotate_around_z(self, rotation_centre, theta):
         '''Rotates the bounding around the z-axis by an angle 'theta'
         and 'rotation_centre' as the centre of rotation.

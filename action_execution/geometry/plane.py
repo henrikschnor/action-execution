@@ -29,13 +29,34 @@ class Plane(object):
     Email -- aleksandar.mitrevski@h-brs.de
 
     '''
-    def __init__(self, obj_id='', pose=Pose3(), bbox=BBox3()):
-        self.id = obj_id
+    def __init__(self, plane_id='', pose=Pose3(), bbox=BBox3()):
+        self.id = plane_id
         self.pose = deepcopy(pose)
         self.bbox = deepcopy(bbox)
 
     def __deepcopy__(self, memo):
         return Plane(self.id, deepcopy(self.pose), deepcopy(self.bbox))
+
+    def __str__(self):
+        position_str = '    x: {0}\n    y: {1}\n    z: {2}'.format(self.pose.position.x,
+                                                                   self.pose.position.y,
+                                                                   self.pose.position.z)
+        orientation_str = '    x: {0}\n    y: {1}\n    z: {2}'.format(self.pose.orientation.x,
+                                                                      self.pose.orientation.y,
+                                                                      self.pose.orientation.z)
+        bbox_min_str = '    x: {0}\n    y: {1}\n    z: {2}'.format(self.bbox.min.x,
+                                                                   self.bbox.min.y,
+                                                                   self.bbox.min.z)
+        bbox_max_str = '    x: {0}\n    y: {1}\n    z: {2}'.format(self.bbox.max.x,
+                                                                   self.bbox.max.y,
+                                                                   self.bbox.max.z)
+
+        pose_str = '  position:\n{0}\n  orientation:\n{1}'.format(position_str,
+                                                                  orientation_str)
+        bbox_str = '  min:\n{0}\n  max:\n{1}'.format(bbox_min_str, bbox_max_str)
+        return 'id: {0}\npose:\n{1}\nbbox:\n{2}'.format(self.id,
+                                                        pose_str,
+                                                        bbox_str)
 
     def to_dict(self):
         obj_dict = dict()
