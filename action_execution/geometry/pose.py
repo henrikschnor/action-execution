@@ -45,8 +45,7 @@ class Pose2(object):
     def __str__(self):
         position_str = '  x: {0}\n  y: {1}'.format(self.position.x,
                                                    self.position.y)
-        orientation_str = '  x: {0}\n  y: {1}'.format(self.orientation.x,
-                                                      self.orientation.y)
+        orientation_str = '  {0}'.format(self.orientation)
         return 'frame_id: {0}\nposition:\n{1}\norientation:\n{2}'.format(self.frame_id,
                                                                          position_str,
                                                                          orientation_str)

@@ -52,7 +52,7 @@ class ExecutionModel(object):
         config_path = join(self.config_path, model_name + '.yaml')
 
         try:
-            file_handle = file(config_path, 'r')
+            file_handle = open(config_path, 'r')
             config = yaml.load(file_handle)
             file_handle.close()
 

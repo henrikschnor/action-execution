@@ -121,6 +121,10 @@ class LoggerConfigKeys(object):
     MODEL_INPUT_COLLECTION_DEBUG = 'model_inputs_debug'
     MODEL_RESULT_COLLECTION_DEBUG = 'model_results_debug'
 
+class BlackBoxConfig(object):
+    ENABLED = False
+    PORT = 5680
+
 MODEL_CLASS_MAPPING = {'free_space': 'FreeSpaceModel',
                        'proximity': 'ProximityModel',
                        'sort_release': 'SortReleaseModel',

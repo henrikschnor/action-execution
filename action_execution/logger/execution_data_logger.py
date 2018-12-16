@@ -18,31 +18,37 @@
 '''
 
 import pymongo as pm
+import zmq
+import json
+from action_execution.config_keys import LoggerConfigKeys, BlackBoxConfig
 
 class ExecutionDataLogger(object):
-    def __init__(self, db_name):
-        self.db_name = db_name
-        mongo_client = pm.MongoClient()
-        self.db = mongo_client[self.db_name]
+    def __init__(self):
+        if not BlackBoxConfig.ENABLED:
+            self.db_name = LoggerConfigKeys.DB_NAME
+            print('Black box disabled; logging data in local database {0}'.format(self.db_name))
+        else:
+            self.context = zmq.Context()
+            self.socket = self.context.socket(zmq.PUB)
+            self.socket.bind("tcp://*:{0}".format(BlackBoxConfig.PORT))
+            print('Logging data on black box')
 
-    def log_metadata(self, collection_name, metadata, doc_id=None):
-        collection = self.db[collection_name]
-        document = metadata
-        document['model_data'] = dict()
-        result = collection.insert_one(document)
-        doc_id = result.inserted_id
-        return doc_id
-
-    def log_model_data(self, collection_name, document_data, doc_id):
-        collection = self.db[collection_name]
-        document = collection.find_one({'_id': doc_id})
-        document['model_data'].update(document_data)
-        collection.replace_one({'_id': doc_id}, document)
-        return doc_id
+    def log_model_data(self, action_name, document_data):
+        if not BlackBoxConfig.ENABLED:
+            mongo_client = pm.MongoClient()
+            db = mongo_client[self.db_name]
+            collection = db[action_name]
+            collection.insert_one(document_data)
+        else:
+            json_data = json.dumps(document_data)
+            self.socket.send_multipart([bytearray(action_name, 'utf8'),
+                                        bytearray(json_data, 'utf8')])
 
     def get_action_data(self, collection_name, action_name,
                         start_timestamp, end_timestamp):
-        collection = self.db[collection_name]
+        mongo_client = pm.MongoClient()
+        db = mongo_client[self.db_name]
+        collection = db[collection_name]
 
         doc = None
         if start_timestamp > 0. and end_timestamp > 0. and start_timestamp < end_timestamp:

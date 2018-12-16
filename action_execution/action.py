@@ -72,7 +72,7 @@ class Action(object):
         self.action_data = ActionData(action_name)
         self.failure_case_data = FailureCaseData()
         self.model_data = ModelData()
-        self.data_logger = ExecutionDataLogger(LoggerConfigKeys.DB_NAME)
+        self.data_logger = ExecutionDataLogger()
 
         if self.action_data.id is not None:
             self.load_config(self.action_data.id)
@@ -81,26 +81,17 @@ class Action(object):
         '''Gets the results from all action execution models.
         '''
         timestamp = int(round(time.time()) * 1000)
-        input_log_dict = {'action_name': self.action_data.id,
-                          'timestamp': timestamp}
-        result_log_dict = {'action_name': self.action_data.id,
-                           'timestamp': timestamp}
-
-        input_log_id = self.data_logger.log_metadata(LoggerConfigKeys.MODEL_INPUT_COLLECTION,
-                                                     input_log_dict)
-        result_log_id = self.data_logger.log_metadata(LoggerConfigKeys.MODEL_RESULT_COLLECTION,
-                                                      result_log_dict)
+        log_dict = {'action_name': self.action_data.id,
+                    'timestamp': timestamp,
+                    'inputs': {'model_data': {}},
+                    'outputs': {'model_data': {}}
+                   }
 
         model_results = list()
-        for i in xrange(len(self.model_data.models)):
+        for i in range(len(self.model_data.models)):
             # we initialise the execution model
             model = self.model_data.models[i](**kwargs)
-
-            # we log the model input data
-            self.data_logger.log_model_data(LoggerConfigKeys.MODEL_INPUT_COLLECTION,
-                                            model.input_to_dict(),
-                                            input_log_id)
-
+            log_dict['inputs']['model_data'].update(model.input_to_dict())
             valid_input, message = self.model_data.config[i].verify_input(kwargs)
             if valid_input:
                 results = None
@@ -110,47 +101,27 @@ class Action(object):
                 else:
                     results = model.generate_data(data_count)
                     model_results.append(results)
-
-                # we log the model result data
-                self.data_logger.log_model_data(LoggerConfigKeys.MODEL_RESULT_COLLECTION,
-                                                model.result_to_dict(results),
-                                                result_log_id)
+                log_dict['outputs']['model_data'].update(model.result_to_dict(results))
             else:
                 print(self.model_data.keys[i] + ': ' + message)
 
         if self.model_data.combination_model is not None:
             # we initialise the combination model
             model = self.model_data.combination_model(model_results)
-
-            # we log the model input data
-            self.data_logger.log_model_data(LoggerConfigKeys.MODEL_INPUT_COLLECTION,
-                                            model.input_to_dict(),
-                                            input_log_id)
-
             model_results = model.process_data()
-
-            # we log the model result data
-            self.data_logger.log_model_data(LoggerConfigKeys.MODEL_RESULT_COLLECTION,
-                                            model.result_to_dict(model_results),
-                                            result_log_id)
+            log_dict['inputs']['model_data'].update(model.input_to_dict())
+            log_dict['outputs']['model_data'].update(model.result_to_dict(results))
         else:
             model_results = model_results[0]
 
         if self.model_data.output_model is not None:
             # we initialise the output model
             model = self.model_data.output_model(model_results)
-
-            # we log the model input data
-            self.data_logger.log_model_data(LoggerConfigKeys.MODEL_INPUT_COLLECTION,
-                                            model.input_to_dict(),
-                                            input_log_id)
             model_results = model.process_data()
+            log_dict['inputs']['model_data'].update(model.input_to_dict())
+            log_dict['outputs']['model_data'].update(model.result_to_dict(results))
 
-            # we log the model result data
-            self.data_logger.log_model_data(LoggerConfigKeys.MODEL_RESULT_COLLECTION,
-                                            model.result_to_dict(model_results),
-                                            result_log_id)
-
+        self.data_logger.log_model_data(self.action_data.id, log_dict)
         return model_results
 
     def check_failures(self, **kwargs):
@@ -171,13 +142,13 @@ class Action(object):
                                                        end_timestamp)
 
         result_data_dict = dict()
-        for model, data in result_data.iteritems():
+        for model, data in result_data.items():
             result_data_dict[model] = dict()
-            for key, value in data.iteritems():
-                if type(value).__name__ == 'list':
+            for key, value in data.items():
+                if isinstance(value, list):
                     result_data_dict[model][key] = list()
                     for v in value:
-                        if type(v).__name__ == 'dict':
+                        if isinstance(v, dict):
                             obj_type = v['header']['type']
                             obj_module = 'action_execution.' + OBJ_MODULE_MAPPING[obj_type]
                             obj_class = getattr(import_module(obj_module),
@@ -198,7 +169,7 @@ class Action(object):
         config_path = join(self.action_config_path, action_name + '.yaml')
 
         try:
-            file_handle = file(config_path, 'r')
+            file_handle = open(config_path, 'r')
             config = yaml.load(file_handle)
             file_handle.close()
 
@@ -277,7 +248,7 @@ class Action(object):
 
         '''
         config_path = join(self.action_config_path, action_id + '.yaml')
-        file_handle = file(config_path, 'r')
+        file_handle = open(config_path, 'r')
         config = yaml.load(file_handle)
         file_handle.close()
 
@@ -329,7 +300,7 @@ class Action(object):
             f_path = join(self.action_config_path, f_name)
             if not isfile(f_path):
                 continue
-            file_handle = file(f_path, 'r')
+            file_handle = open(f_path, 'r')
             action_config = yaml.load(file_handle)
             file_handle.close()
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''
     Copyright 2018 by Alex Mitrevski <aleksandar.mitrevski@h-brs.de>
 
@@ -30,7 +32,7 @@ from action_execution.action import Action
 from action_execution.test_utils.table_multiclass_objects import *
 
 def plot_points(surface, static_obj, poses, probs):
-    surface_corners = surface.get_z_projection().bounds
+    surface_corners = surface.bbox.get_z_projection().bounds
     static_obj_corners = list()
     for obj in static_obj:
         static_obj_corners.append(obj.get_z_projection().bounds)

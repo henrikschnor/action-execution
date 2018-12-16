@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''
     Copyright 2018 by Alex Mitrevski <aleksandar.mitrevski@h-brs.de>
 
@@ -73,16 +75,10 @@ if __name__ == '__main__':
     plot_points(obj_config.surface, obj_config.static_objs, poses)
 
     timestamp = int(round(time.time()) * 1000)
-    data_logger = ExecutionDataLogger(LoggerConfigKeys.DB_NAME_DEBUG)
-
-    input_log_dict = {'action_name': '', 'timestamp': timestamp}
-    result_log_dict = {'action_name': '', 'timestamp': timestamp}
-    input_log_id = data_logger.log_metadata(LoggerConfigKeys.MODEL_INPUT_COLLECTION_DEBUG,
-                                            input_log_dict)
-    result_log_id = data_logger.log_metadata(LoggerConfigKeys.MODEL_RESULT_COLLECTION_DEBUG,
-                                             result_log_dict)
-
-    data_logger.log_model_data(LoggerConfigKeys.MODEL_INPUT_COLLECTION_DEBUG,
-                               model.input_to_dict(), input_log_id)
-    data_logger.log_model_data(LoggerConfigKeys.MODEL_RESULT_COLLECTION_DEBUG,
-                               model.result_to_dict(model_results), result_log_id)
+    log_dict = {'action_name': '',
+                'timestamp': timestamp,
+                'inputs': {'model_data': model.input_to_dict()},
+                'outputs': {'model_data': model.result_to_dict(model_results)}
+               }
+    data_logger = ExecutionDataLogger()
+    data_logger.log_model_data('model_test', log_dict)
