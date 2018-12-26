@@ -2,7 +2,7 @@
 #              based on their class
 # Author: Alex Mitrevski
 # Email: aleksandar.mitrevski@h-brs.de
-model_id: proximity
+model_id: sort_release
 inputs:
     - input:
         name: frame_id
