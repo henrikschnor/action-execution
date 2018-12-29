@@ -25,9 +25,9 @@ from action_execution.execution_models.model import ExecutionModelBase
 from action_execution.geometry.vector import Vector2, Vector3
 from action_execution.geometry.pose import Pose3
 
-class ProximityModel(ExecutionModelBase):
+class Proximity(ExecutionModelBase):
     def __init__(self, action_id='', data_logger=None, **kwargs):
-        super(ProximityModel, self).__init__(model_id='proximity')
+        super(Proximity, self).__init__(model_id='proximity')
 
         self.frame_id = ''
         self.manipulated_object = None

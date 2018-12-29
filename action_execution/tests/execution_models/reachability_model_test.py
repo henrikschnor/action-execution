@@ -20,17 +20,11 @@
 '''
 
 import time
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-from action_execution.geometry.vector import Vector3
-from action_execution.geometry.bbox import BBox3
-from action_execution.geometry.pose import Pose3
-from action_execution.geometry.object import Object3d
-from action_execution.execution_models.reachability import ReachabilityModel
+from action_execution.execution_models.Reachability import Reachability
 from action_execution.logger.execution_data_logger import ExecutionDataLogger
-from action_execution.config_keys import LoggerConfigKeys
 from action_execution.test_utils.table_two_objects import *
 
 def plot_points(surface, static_obj, poses):
@@ -48,7 +42,7 @@ def plot_points(surface, static_obj, poses):
     surface_height = surface_corners[3] - surface_corners[1]
     axes.add_patch(patches.Rectangle(surface_coords, surface_width, surface_height))
 
-    for i in xrange(len(static_obj_corners)):
+    for i in range(len(static_obj_corners)):
         obj_coords = (static_obj_corners[i][0], static_obj_corners[i][1])
         obj_width = static_obj_corners[i][2] - static_obj_corners[i][0]
         obj_height = static_obj_corners[i][3] - static_obj_corners[i][1]
@@ -63,11 +57,11 @@ def plot_points(surface, static_obj, poses):
 
 if __name__ == '__main__':
     arm_name = 'arm'
-    model = ReachabilityModel(frame_id=obj_config.frame_id,
-                              manipulated_object=obj_config.manipulated_obj,
-                              objects_on_surface=obj_config.static_objs,
-                              surface=obj_config.surface,
-                              arm=arm_name)
+    model = Reachability(frame_id=obj_config.frame_id,
+                         manipulated_object=obj_config.manipulated_obj,
+                         objects_on_surface=obj_config.static_objs,
+                         surface=obj_config.surface,
+                         arm=arm_name)
 
     number_of_samples = 10
     model_results = model.generate_data(number_of_samples)

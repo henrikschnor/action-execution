@@ -1,0 +1,285 @@
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+]>
+
+<rdf:RDF
+    xmlns:action="http://action#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+    <owl:Ontology rdf:about="http://action" />
+
+    <!--************* Class definitions ************-->
+    <owl:Class rdf:about="action:Action"/>
+    <owl:Class rdf:about="action:Capability"/>
+    <owl:Class rdf:about="action:FailureCase"/>
+    <owl:Class rdf:about="action:ExecutionModel"/>
+    <!--*********************************************-->
+
+
+    <!--************ Property definitions ***********-->
+    <owl:ObjectProperty rdf:about="action:requires">
+      <rdfs:domain rdf:resource="action:Action"/>
+      <rdfs:range rdf:resource="action:Capability"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="action:hasFailurecase">
+      <rdfs:domain rdf:resource="action:Action"/>
+      <rdfs:range rdf:resource="action:FailureCase"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="action:hasModel">
+      <rdfs:domain rdf:resource="action:Action"/>
+      <rdfs:range rdf:resource="action:ExecutionModel"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="action:composeModels">
+      <rdfs:domain rdf:resource="action:Action"/>
+      <rdfs:range rdf:resource="xsd:boolean"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="action:combinationModel">
+      <rdfs:domain rdf:resource="action:Action"/>
+      <rdfs:range rdf:resource="action:ExecutionModel"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="action:outputModel">
+      <rdfs:domain rdf:resource="action:Action"/>
+      <rdfs:range rdf:resource="action:ExecutionModel"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="action:isInstanceOf">
+      <rdfs:domain rdf:resource="action:Action"/>
+      <rdfs:range rdf:resource="action:Action"/>
+    </owl:ObjectProperty>
+    <!--*********************************************-->
+
+
+    <!--****** Class disjointness definitions *******-->
+    <owl:AllDisjointClasses>
+        <owl:members rdf:parseType="Collection">
+            <owl:Class rdf:about="action:Action"/>
+            <owl:Class rdf:about="action:Capability"/>
+            <owl:Class rdf:about="action:FailureCase"/>
+            <owl:Class rdf:about="action:ExecutionModel"/>
+        </owl:members>
+    </owl:AllDisjointClasses>
+    <!--*********************************************-->
+
+
+    <!--******* Class assertions *******-->
+
+    <!-- actions -->
+    <action:Action rdf:about="Pick"/>
+    <action:Action rdf:about="Place"/>
+    <action:Action rdf:about="MoveBase"/>
+    <action:Action rdf:about="Throw"/>
+
+    <action:Action rdf:about="Release"/>
+    <action:Action rdf:about="SortRelease"/>
+
+    <!-- capabilities -->
+    <action:Capability rdf:about="Manipulation"/>
+    <action:Capability rdf:about="Navigation"/>
+    <action:Capability rdf:about="Perception"/>
+
+    <!-- failure cases -->
+    <action:FailureCase rdf:about="KnockingObjectsOver"/>
+    <action:FailureCase rdf:about="ObjectFallsOver"/>
+    <action:FailureCase rdf:about="Collision"/>
+    <action:FailureCase rdf:about="UnreachableManipulationPose"/>
+    <action:FailureCase rdf:about="UnreachableNavigationPose"/>
+
+    <!-- execution models -->
+    <action:ExecutionModel rdf:about="FreeSpace"/>
+    <action:ExecutionModel rdf:about="Proximity"/>
+    <action:ExecutionModel rdf:about="ReleaseNearSameCategory"/>
+    <action:ExecutionModel rdf:about="ReleaseOverObject"/>
+    <action:ExecutionModel rdf:about="PoseSuccessProbability"/>
+    <action:ExecutionModel rdf:about="ReachabilityChecker"/>
+    <!--********************************-->
+
+
+    <!--******* Placing action *******-->
+    <!-- capabilities -->
+    <rdf:Description rdf:about="Place">
+        <action:requires rdf:resource="Manipulation"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Place">
+        <action:requires rdf:resource="Navigation"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Place">
+        <action:requires rdf:resource="Perception"/>
+    </rdf:Description>
+
+    <!-- known failure cases -->
+    <rdf:Description rdf:about="Place">
+        <action:hasFailurecase rdf:resource="KnockingObjectsOver"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Place">
+        <action:hasFailurecase rdf:resource="ObjectFallsOver"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Place">
+        <action:hasFailurecase rdf:resource="UnreachableManipulationPose"/>
+    </rdf:Description>
+
+    <!-- execution models -->
+    <rdf:Description rdf:about="Place">
+        <action:hasModel rdf:resource="FreeSpace"/>
+    </rdf:Description>
+
+    <!-- whether to compose models -->
+    <rdf:Description rdf:about="Place">
+        <action:composeModels rdf:resource="true"/>
+    </rdf:Description>
+
+    <!-- combination model -->
+    <rdf:Description rdf:about="Place">
+        <action:combinationModel rdf:resource="PoseSuccessProbability"/>
+    </rdf:Description>
+
+    <!--***********************************-->
+
+    <!--******* Release action *******-->
+    <rdf:Description rdf:about="Release">
+        <action:isInstanceOf rdf:resource="Place"/>
+    </rdf:Description>
+
+    <!-- execution models -->
+    <rdf:Description rdf:about="Release">
+        <action:hasModel rdf:resource="Proximity"/>
+    </rdf:Description>
+    <!--*******************************-->
+
+    <!--******* Sort-release action *******-->
+    <rdf:Description rdf:about="SortRelease">
+        <action:isInstanceOf rdf:resource="Place"/>
+    </rdf:Description>
+
+    <!-- execution models -->
+    <rdf:Description rdf:about="SortRelease">
+        <action:hasModel rdf:resource="ReleaseNearSameCategory"/>
+    </rdf:Description>
+    <!--*******************************-->
+
+
+    <!--******* Throwing action *******-->
+    <!-- capabilities -->
+    <rdf:Description rdf:about="Throw">
+        <action:requires rdf:resource="Manipulation"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Throw">
+        <action:requires rdf:resource="Navigation"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Throw">
+        <action:requires rdf:resource="Perception"/>
+    </rdf:Description>
+
+    <!-- known failure cases -->
+    <rdf:Description rdf:about="Throw">
+        <action:hasFailurecase rdf:resource="ObjectFallsOver"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Throw">
+        <action:hasFailurecase rdf:resource="UnreachableManipulationPose"/>
+    </rdf:Description>
+
+    <!-- execution models -->
+    <rdf:Description rdf:about="Throw">
+        <action:hasModel rdf:resource="ReleaseOverObject"/>
+    </rdf:Description>
+
+    <!-- whether to compose models -->
+    <rdf:Description rdf:about="Throw">
+        <action:composeModels rdf:resource="true"/>
+    </rdf:Description>
+
+    <!-- combination model -->
+    <rdf:Description rdf:about="Throw">
+        <action:combinationModel rdf:resource="PoseSuccessProbability"/>
+    </rdf:Description>
+
+
+    <!--***********************************-->
+
+
+    <!--******* Move base action *******-->
+    <!-- capabilities -->
+    <rdf:Description rdf:about="MoveBase">
+        <action:requires rdf:resource="Navigation"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="MoveBase">
+        <action:requires rdf:resource="Perception"/>
+    </rdf:Description>
+
+    <!-- known failure cases -->
+    <rdf:Description rdf:about="MoveBase">
+        <action:hasFailurecase rdf:resource="Collision"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="MoveBase">
+        <action:hasFailurecase rdf:resource="KnockingObjectsOver"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="MoveBase">
+        <action:hasFailurecase rdf:resource="UnreachableNavigationPose"/>
+    </rdf:Description>
+
+    <!-- execution models -->
+    <rdf:Description rdf:about="MoveBase">
+        <action:hasModel rdf:resource="FindPath"/>
+    </rdf:Description>
+
+    <!-- whether to compose models -->
+    <rdf:Description rdf:about="MoveBase">
+        <action:composeModels rdf:resource="false"/>
+    </rdf:Description>
+    <!--***********************************-->
+
+
+    <!--******* Pick action *******-->
+    <!-- capabilities -->
+    <rdf:Description rdf:about="Pick">
+        <action:requires rdf:resource="Manipulation"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Pick">
+        <action:requires rdf:resource="Navigation"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Pick">
+        <action:requires rdf:resource="Perception"/>
+    </rdf:Description>
+
+    <!-- known failure cases -->
+    <rdf:Description rdf:about="Pick">
+        <action:hasFailurecase rdf:resource="KnockingObjectsOver"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Pick">
+        <action:hasFailurecase rdf:resource="ObjectFallsOver"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="Pick">
+        <action:hasFailurecase rdf:resource="UnreachableManipulationPose"/>
+    </rdf:Description>
+
+    <!-- execution models -->
+    <rdf:Description rdf:about="Pick">
+        <action:hasModel rdf:resource="Grasp"/>
+    </rdf:Description>
+
+    <!-- whether to compose models -->
+    <rdf:Description rdf:about="Pick">
+        <action:composeModels rdf:resource="false"/>
+    </rdf:Description>
+    <!--***********************************-->
+
+
+    <!--******* Property assertions *******-->
+    <rdf:Description rdf:about="Release">
+        <action:isInstanceOf rdf:resource="Place"/>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="SortRelease">
+        <action:isInstanceOf rdf:resource="Release"/>
+    </rdf:Description>
+    <!--***********************************-->
+</rdf:RDF>

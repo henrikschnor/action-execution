@@ -25,9 +25,9 @@ from action_execution.execution_models.model import ExecutionModelBase
 from action_execution.geometry.vector import Vector2, Vector3
 from action_execution.geometry.pose import Pose3
 
-class ReleaseOverObjectModel(ExecutionModelBase):
+class ReleaseOverObject(ExecutionModelBase):
     def __init__(self, action_id='', data_logger=None, **kwargs):
-        super(ReleaseOverObjectModel, self).__init__(model_id='free_space')
+        super(ReleaseOverObject, self).__init__(model_id='free_space')
 
         self.frame_id = ''
         self.manipulated_object = None

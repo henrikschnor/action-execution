@@ -17,16 +17,14 @@
     along with action-execution. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from __future__ import print_function
+from os.path import join
 import time
-from os import listdir
-from os.path import join, isfile
 from importlib import import_module
-import yaml
+
+from mas_knowledge_utils.ontology_query_interface import OntologyQueryInterface
 
 from action_execution.config_keys import PathConfig, ActionConfigKeys, \
-                                         LoggerConfigKeys, MODEL_CLASS_MAPPING, \
-                                         OBJ_MODULE_MAPPING
+                                         LoggerConfigKeys, OBJ_MODULE_MAPPING
 from action_execution.execution_model import ExecutionModel
 from action_execution.failure_case import FailureCase
 from action_execution.logger.execution_data_logger import ExecutionDataLogger
@@ -48,7 +46,7 @@ class ModelData(object):
         self.keys = list()
         self.config = list()
         self.models = list()
-        self.sequence_models = False
+        self.compose_models = False
         self.combination_model_key = None
         self.combination_model = None
         self.output_model_key = None
@@ -64,6 +62,8 @@ class Action(object):
 
     '''
     def __init__(self, action_name=None):
+        self.ontology = OntologyQueryInterface(PathConfig.ONTOLOGY_URL,
+                                               PathConfig.ONTOLOGY_ENTITY_PREFIX)
         self.action_config_path = join(PathConfig.DIR_ABS_PATH,
                                        PathConfig.ACTION_CONFIG_PATH)
         self.failure_case_config_path = join(PathConfig.DIR_ABS_PATH,
@@ -95,7 +95,7 @@ class Action(object):
             valid_input, message = self.model_data.config[i].verify_input(kwargs)
             if valid_input:
                 results = None
-                if self.model_data.sequence_models and model_results:
+                if self.model_data.compose_models and model_results:
                     results = model.process_data(model_results[0])
                     model_results[0] = results
                 else:
@@ -166,152 +166,109 @@ class Action(object):
         action_name -- id of an action
 
         '''
-        config_path = join(self.action_config_path, action_name + '.yaml')
+        # we get all ancestor actions of the current action and load the
+        # configuration of each ancestor action
+        self.action_data.id = action_name
+        self.action_data.instance_of = self.ontology.get_objects_of(ActionConfigKeys.INSTANCE_OF,
+                                                                    action_name)
 
-        try:
-            file_handle = open(config_path, 'r')
-            config = yaml.load(file_handle)
-            file_handle.close()
+        for action in self.action_data.instance_of:
+            self.__load_parent_action_config(action)
 
-            self.action_data.id = action_name
-            if ActionConfigKeys.INSTANCE_OF in config:
-                self.action_data.instance_of = config[ActionConfigKeys.INSTANCE_OF]
+        # we get the required capabilities of the action and add them to the list
+        # of capabilities (but make sure there are no duplicates)
+        capabilities = self.ontology.get_objects_of(ActionConfigKeys.CAPABILITIES, action_name)
+        self.action_data.capabilities += [c for c in capabilities
+                                          if c not in self.action_data.capabilities]
 
-            for action in self.action_data.instance_of:
-                self.__load_parent_action_config(action)
+        # we get the failure cases of the action and add them to the list
+        # of failure cases (but make sure there are no duplicates)
+        failure_cases = self.ontology.get_objects_of(ActionConfigKeys.FAILURE_CASES, action_name)
+        self.failure_case_data.keys += [f for f in failure_cases
+                                        if f not in self.failure_case_data.keys]
 
-            if ActionConfigKeys.CAPABILITIES in config:
-                capabilities = config[ActionConfigKeys.CAPABILITIES]
-                for capability in capabilities:
-                    if capability not in self.action_data.capabilities:
-                        self.action_data.capabilities.append(capability)
+        # we get the execution models of the action and add them to the list
+        # of models (but make sure there are no duplicates)
+        models = self.ontology.get_objects_of(ActionConfigKeys.MODELS, action_name)
+        self.model_data.keys += [m for m in models if m not in self.model_data.keys]
 
-            if ActionConfigKeys.FAILURE_CASES in config:
-                failure_cases = config[ActionConfigKeys.FAILURE_CASES]
-                for failure in failure_cases:
-                    if failure not in self.failure_case_data.keys:
-                        self.failure_case_data.keys.append(failure)
+        # we check whether the models need to be sequenced
+        compose_models = self.ontology.get_objects_of(ActionConfigKeys.MODELS, action_name)
+        if compose_models:
+            self.model_data.compose_models = True
 
-            if ActionConfigKeys.MODELS in config:
-                models = config[ActionConfigKeys.MODELS]
-                for model in models:
-                    if model not in self.model_data.keys:
-                        self.model_data.keys.append(model)
+        # we get the combination model (if defined)
+        comb_model = self.ontology.get_objects_of(ActionConfigKeys.COMBINATION_MODEL, action_name)
+        if comb_model:
+            self.model_data.combination_model_key = comb_model[0]
 
-            if ActionConfigKeys.SEQUENCE_MODELS in config:
-                self.model_data.sequence_models = config[ActionConfigKeys.SEQUENCE_MODELS]
+        # we get the output model (if defined)
+        output_model = self.ontology.get_objects_of(ActionConfigKeys.OUTPUT_MODEL, action_name)
+        if output_model:
+            self.model_data.output_model_key = output_model[0]
 
-            if ActionConfigKeys.COMBINATION_MODEL in config:
-                self.model_data.combination_model_key = config[ActionConfigKeys.COMBINATION_MODEL]
+        # for each model key, we create an instance of the
+        # model config class and the model
+        for model_key in self.model_data.keys:
+            self.model_data.config.append(ExecutionModel(model_key))
 
-            if ActionConfigKeys.OUTPUT_MODEL in config:
-                self.model_data.output_model_key = config[ActionConfigKeys.OUTPUT_MODEL]
+            model_module = 'action_execution.execution_models.' + model_key
+            model_class = getattr(import_module(model_module), model_key)
+            self.model_data.models.append(model_class)
 
-            # for each model key, we create an instance of the
-            # model config class and the model
-            for model_key in self.model_data.keys:
-                self.model_data.config.append(ExecutionModel(model_key))
+        if self.model_data.combination_model_key is not None:
+            model_key = self.model_data.combination_model_key
+            model_module = 'action_execution.execution_models.' + model_key
+            model_class = getattr(import_module(model_module), model_key)
+            self.model_data.combination_model = model_class
 
-                model_module = 'action_execution.execution_models.' + model_key
-                model_class = getattr(import_module(model_module),
-                                      MODEL_CLASS_MAPPING[model_key])
-                self.model_data.models.append(model_class)
+        if self.model_data.output_model_key is not None:
+            model_key = self.model_data.output_model_key
+            model_module = 'action_execution.execution_models.' + model_key
+            model_class = getattr(import_module(model_module), model_key)
+            self.model_data.output_model = model_class
 
-            if self.model_data.combination_model_key is not None:
-                model_key = self.model_data.combination_model_key
-                model_module = 'action_execution.execution_models.' + model_key
-                model_class = getattr(import_module(model_module),
-                                      MODEL_CLASS_MAPPING[model_key])
-                self.model_data.combination_model = model_class
+        for failure_case in self.failure_case_data.keys:
+            self.failure_case_data.config.append(FailureCase(failure_case))
 
-            if self.model_data.output_model_key is not None:
-                model_key = self.model_data.output_model_key
-                model_module = 'action_execution.execution_models.' + model_key
-                model_class = getattr(import_module(model_module),
-                                      MODEL_CLASS_MAPPING[model_key])
-                self.model_data.output_model = model_class
+        print('Description of "{0}" loaded successfully'.format(self.action_data.id))
 
-            for failure_case in self.failure_case_data.keys:
-                self.failure_case_data.config.append(FailureCase(failure_case))
-
-            print('Description of "{0}" loaded successfully'.format(self.action_data.id))
-        except IOError:
-            print('Cannot load config of unknown action "{0}"'.format(self.action_data.id))
-
-    def __load_parent_action_config(self, action_id):
+    def __load_parent_action_config(self, action_name):
         '''Loads the config files of the parents of the current action
         and adds their capabilities, known failure cases, and execution models
         to the current action's respective lists
 
         Keyword arguments:
-        action_id
+        @param action_name -- name of an action
 
         '''
-        config_path = join(self.action_config_path, action_id + '.yaml')
-        file_handle = open(config_path, 'r')
-        config = yaml.load(file_handle)
-        file_handle.close()
 
-        instance_of = list()
-        if ActionConfigKeys.INSTANCE_OF in config:
-            instance_of = config[ActionConfigKeys.INSTANCE_OF]
+        capabilities = self.ontology.get_objects_of(ActionConfigKeys.CAPABILITIES, action_name)
+        for capability in capabilities:
+            if capability not in self.action_data.capabilities:
+                self.action_data.capabilities.insert(0, capability)
 
-        if ActionConfigKeys.CAPABILITIES in config:
-            capabilities = config[ActionConfigKeys.CAPABILITIES]
-            for capability in capabilities:
-                if capability not in self.action_data.capabilities:
-                    self.action_data.capabilities.insert(0, capability)
+        failure_cases = self.ontology.get_objects_of(ActionConfigKeys.FAILURE_CASES, action_name)
+        for failure in failure_cases:
+            if failure not in self.failure_case_data.keys:
+                self.failure_case_data.keys.insert(0, failure)
 
-        if ActionConfigKeys.FAILURE_CASES in config:
-            failure_cases = config[ActionConfigKeys.FAILURE_CASES]
-            for failure in failure_cases:
-                if failure not in self.failure_case_data.keys:
-                    self.failure_case_data.keys.insert(0, failure)
+        models = self.ontology.get_objects_of(ActionConfigKeys.MODELS, action_name)
+        for model in models:
+            if model not in self.model_data.keys:
+                self.model_data.keys.insert(0, model)
 
-        if ActionConfigKeys.MODELS in config:
-            models = config[ActionConfigKeys.MODELS]
-            for model in models:
-                if model not in self.model_data.keys:
-                    self.model_data.keys.insert(0, model)
+        compose_models = self.ontology.get_objects_of(ActionConfigKeys.MODELS, action_name)
+        if compose_models:
+            self.model_data.compose_models = True
 
-        if ActionConfigKeys.SEQUENCE_MODELS in config:
-            self.model_data.sequence_models = config[ActionConfigKeys.SEQUENCE_MODELS]
+        comb_model = self.ontology.get_objects_of(ActionConfigKeys.COMBINATION_MODEL, action_name)
+        if comb_model:
+            self.model_data.combination_model_key = comb_model[0]
 
-        if ActionConfigKeys.COMBINATION_MODEL in config:
-            self.model_data.combination_model_key = config[ActionConfigKeys.COMBINATION_MODEL]
-
-        if ActionConfigKeys.OUTPUT_MODEL in config:
-            self.model_data.output_model_key = config[ActionConfigKeys.OUTPUT_MODEL]
-
-        for action in instance_of:
-            self.__load_parent_action_config(action)
-
-    def parent_actions(self):
-        '''Returns a list of keys of the actions that the current action is an instance of
-        '''
-        return list(self.action_data.instance_of)
-
-    def children_actions(self):
-        '''Returns a list of keys of the actions that are direct instances of the current action
-        '''
-        action_list = list()
-        for f_name in listdir(self.action_config_path):
-            action_id = f_name.split('.')[0]
-            f_path = join(self.action_config_path, f_name)
-            if not isfile(f_path):
-                continue
-            file_handle = open(f_path, 'r')
-            action_config = yaml.load(file_handle)
-            file_handle.close()
-
-            instance_of_keys = list()
-            if ActionConfigKeys.INSTANCE_OF in action_config:
-                instance_of_keys = action_config[ActionConfigKeys.INSTANCE_OF]
-
-            if self.action_data.id in instance_of_keys:
-                action_list.append(action_id)
-
-        return action_list
+        output_model = self.ontology.get_objects_of(ActionConfigKeys.OUTPUT_MODEL, action_name)
+        if output_model:
+            self.model_data.output_model_key = output_model[0]
 
     def print_config(self):
         '''Prints the values of the action's config fields
@@ -321,6 +278,6 @@ class Action(object):
         print('capabilities = {0}'.format(self.action_data.capabilities))
         print('failure_case_keys = {0}'.format(self.failure_case_data.keys))
         print('model_keys = {0}'.format(self.model_data.keys))
-        print('sequence_models = {0}'.format(self.model_data.sequence_models))
+        print('compose_models = {0}'.format(self.model_data.compose_models))
         print('combination_model_key = {0}'.format(self.model_data.combination_model_key))
         print('output_model_key = {0}'.format(self.model_data.output_model_key))

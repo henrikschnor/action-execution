@@ -23,10 +23,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-from action_execution.geometry.vector import Vector3
-from action_execution.geometry.bbox import BBox3
-from action_execution.geometry.pose import Pose3
-from action_execution.geometry.object import Object3d
 from action_execution.action import Action
 from action_execution.test_utils.table_two_objects import *
 
@@ -62,7 +58,13 @@ def plot_points(surface, static_obj, poses, probs):
 
 if __name__ == '__main__':
     arm_name = 'arm'
-    action_model = Action(action_name='place')
+    action_model = Action(action_name='Place')
+
+    print()
+    print('Action config')
+    print('-------------')
+    action_model.print_config()
+
 
     number_of_samples = 10
     results = action_model.get_execution_guidelines(data_count=number_of_samples,

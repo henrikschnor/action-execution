@@ -21,10 +21,10 @@ import numpy as np
 
 from action_execution.execution_models.model import ExecutionModelBase
 
-class PoseSuccessProbabilityModel(ExecutionModelBase):
+class PoseSuccessProbability(ExecutionModelBase):
     def __init__(self, candidates_and_probabilities,
                  action_id='', data_logger=None, **kwargs):
-        super(PoseSuccessProbabilityModel, self).__init__(model_id='pose_success_probability')
+        super(PoseSuccessProbability, self).__init__(model_id='pose_success_probability')
         self.candidates_and_probabilities = candidates_and_probabilities
 
     def process_data(self):

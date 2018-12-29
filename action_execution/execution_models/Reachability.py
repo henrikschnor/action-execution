@@ -28,9 +28,9 @@ from action_execution.geometry.vector import Vector2, Vector3
 from action_execution.geometry.pose import Pose3
 from action_execution.extern.transformations import quaternion_from_euler
 
-class ReachabilityModel(ExecutionModelBase):
+class Reachability(ExecutionModelBase):
     def __init__(self, action_id='', data_logger=None, **kwargs):
-        super(ReachabilityModel, self).__init__(model_id='reachability')
+        super(Reachability, self).__init__(model_id='reachability')
 
         self.frame_id = ''
         self.manipulated_object = None

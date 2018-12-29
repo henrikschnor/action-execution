@@ -52,7 +52,7 @@ class BBox3(object):
 
         '''
         coordinates = self.get_coordinates()
-        for i in xrange(len(coordinates)):
+        for i in range(len(coordinates)):
             coordinates[i] -= rotation_centre
             coordinates[i].rotate_around_z(theta)
             coordinates[i] += rotation_centre

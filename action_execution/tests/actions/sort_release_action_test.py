@@ -19,15 +19,12 @@
     along with action-execution. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 from action_execution.geometry.vector import Vector3
-from action_execution.geometry.bbox import BBox3
 from action_execution.geometry.pose import Pose3
-from action_execution.geometry.object import Object3d
 from action_execution.action import Action
 from action_execution.test_utils.table_multiclass_objects import *
 
@@ -45,7 +42,7 @@ def plot_points(surface, static_obj, poses, probs):
     surface_height = surface_corners[3] - surface_corners[1]
     axes.add_patch(patches.Rectangle(surface_coords, surface_width, surface_height))
 
-    for i in xrange(len(static_obj_corners)):
+    for i in range(len(static_obj_corners)):
         obj_coords = (static_obj_corners[i][0], static_obj_corners[i][1])
         obj_width = static_obj_corners[i][2] - static_obj_corners[i][0]
         obj_height = static_obj_corners[i][3] - static_obj_corners[i][1]
@@ -68,7 +65,12 @@ if __name__ == '__main__':
                        orientation=Vector3(0., 0., 0.))
 
     arm_name = 'arm'
-    action_model = Action(action_name='sort_release')
+    action_model = Action(action_name='SortRelease')
+
+    print()
+    print('Action config')
+    print('-------------')
+    action_model.print_config()
 
     number_of_samples = 10
     results = action_model.get_execution_guidelines(data_count=number_of_samples,

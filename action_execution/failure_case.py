@@ -85,7 +85,7 @@ class FailureCase(object):
         config_path = join(self.failure_case_config_path, failure_case_name + '.yaml')
 
         try:
-            file_handle = file(config_path, 'r')
+            file_handle = open(config_path, 'r')
             config = yaml.load(file_handle)
             file_handle.close()
 

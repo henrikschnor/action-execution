@@ -1,7 +1,0 @@
-# Description: Defines a picking action
-# Author: Alex Mitrevski
-# Email: aleksandar.mitrevski@h-brs.de
-action_id: pick
-capabilities: [manipulation, navigation, perception]
-known_failure_cases: [knocking_objects_over, object_falls_over, unreachable_manipulation_pose]
-execution_models: [grasping]

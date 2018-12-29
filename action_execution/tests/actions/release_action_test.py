@@ -19,15 +19,12 @@
     along with action-execution. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import time
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 from action_execution.geometry.vector import Vector3
-from action_execution.geometry.bbox import BBox3
 from action_execution.geometry.pose import Pose3
-from action_execution.geometry.object import Object3d
 from action_execution.action import Action
 from action_execution.test_utils.table_two_objects import *
 
@@ -68,7 +65,12 @@ if __name__ == '__main__':
                        orientation=Vector3(0., 0., 0.))
 
     arm_name = 'arm'
-    action_model = Action(action_name='release')
+    action_model = Action(action_name='Release')
+
+    print()
+    print('Action config')
+    print('-------------')
+    action_model.print_config()
 
     number_of_samples = 10
     results = action_model.get_execution_guidelines(data_count=number_of_samples,

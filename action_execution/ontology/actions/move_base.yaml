@@ -1,7 +1,0 @@
-# Description: Defines an action for moving the base of a robot
-# Author: Alex Mitrevski
-# Email: aleksandar.mitrevski@h-brs.de
-action_id: move_base
-capabilities: [navigation, perception]
-known_failure_cases: [collisions, knocking_objects_over, unreachable_navigation_pose]
-execution_models: [free_space]

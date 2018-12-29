@@ -25,6 +25,8 @@ class PathConfig(object):
     Email -- aleksandar.mitrevski@h-brs.de
 
     '''
+    ONTOLOGY_URL = 'file:///home/alex/catkin_workspaces/robocup_ws/src/action-execution/action_execution/ontology/actions.owl'
+    ONTOLOGY_ENTITY_PREFIX = 'action'
     DIR_ABS_PATH = '<absolute-path-of-action_execution>'
     ACTION_CONFIG_PATH = 'ontology/actions'
     FAILURE_CASE_CONFIG_PATH = 'ontology/failure_cases'
@@ -39,13 +41,13 @@ class ActionConfigKeys(object):
 
     '''
     ID = 'action_id'
-    INSTANCE_OF = 'instance_of'
-    CAPABILITIES = 'capabilities'
-    FAILURE_CASES = 'known_failure_cases'
-    MODELS = 'execution_models'
-    SEQUENCE_MODELS = 'sequence_models'
-    COMBINATION_MODEL = 'combination_model'
-    OUTPUT_MODEL = 'output_model'
+    INSTANCE_OF = 'isInstanceOf'
+    CAPABILITIES = 'requires'
+    FAILURE_CASES = 'hasFailurecase'
+    MODELS = 'hasModel'
+    COMPOSE_MODELS = 'composeModels'
+    COMBINATION_MODEL = 'combinationModel'
+    OUTPUT_MODEL = 'outputModel'
 
 class FailureCaseConfigKeys(object):
     '''A collection of constants specifying the keys
@@ -124,15 +126,6 @@ class LoggerConfigKeys(object):
 class BlackBoxConfig(object):
     ENABLED = False
     PORT = 5680
-
-MODEL_CLASS_MAPPING = {'free_space': 'FreeSpaceModel',
-                       'proximity': 'ProximityModel',
-                       'sort_release': 'SortReleaseModel',
-                       'storing': 'StoringModel',
-                       'reachability': 'ReachabilityModel',
-                       'pose_success_probability': 'PoseSuccessProbabilityModel',
-                       'reachability_checker': 'ReachabilityCheckerModel',
-                       'release_over_object': 'ReleaseOverObjectModel'}
 
 OBJ_MODULE_MAPPING = {'Pose2': 'geometry.pose',
                       'Pose3': 'geometry.pose',

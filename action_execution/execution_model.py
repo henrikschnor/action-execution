@@ -96,7 +96,7 @@ class ExecutionModel(object):
         '''
         valid_input = True
         message = ''
-        for key, value in argument_dict.iteritems():
+        for key, value in argument_dict.items():
             # the input is invalid if a list of a given type is expected
             # for a given key, but not passed, or if an object of an incorrect
             # type is passed
@@ -164,8 +164,8 @@ class ExecutionModel(object):
         '''
         print('model_id = {0}'.format(self.id))
         print('Inputs:')
-        for key, value in self.inputs.iteritems():
+        for key, value in self.inputs.items():
             print('    {0}: {1}'.format(key, value))
         print('Outputs:')
-        for key, value in self.outputs.iteritems():
+        for key, value in self.outputs.items():
             print('    {0}: {1}'.format(key, value))

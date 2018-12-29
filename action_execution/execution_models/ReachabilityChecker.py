@@ -26,10 +26,10 @@ from action_execution.config_keys import ExecutionConfigKeys
 from action_execution.execution_models.model import ExecutionModelBase
 from action_execution.extern.transformations import quaternion_from_euler
 
-class ReachabilityCheckerModel(ExecutionModelBase):
+class ReachabilityChecker(ExecutionModelBase):
     def __init__(self, pose_candidate_dict,
                  action_id='', data_logger=None, **kwargs):
-        super(ReachabilityCheckerModel, self).__init__(model_id='reachability_checker')
+        super(ReachabilityChecker, self).__init__(model_id='reachability_checker')
 
         self.pose_candidates = pose_candidate_dict['candidate_poses']
         self.frame_id = ''
