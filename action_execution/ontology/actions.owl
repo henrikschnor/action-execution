@@ -16,8 +16,9 @@
     <!--************* Class definitions ************-->
     <owl:Class rdf:about="action:Action"/>
     <owl:Class rdf:about="action:Capability"/>
-    <owl:Class rdf:about="action:FailureCase"/>
     <owl:Class rdf:about="action:ExecutionModel"/>
+    <owl:Class rdf:about="action:FailureCase"/>
+    <owl:Class rdf:about="action:RecoveryBehaviour"/>
     <!--*********************************************-->
 
 
@@ -25,11 +26,6 @@
     <owl:ObjectProperty rdf:about="action:requires">
       <rdfs:domain rdf:resource="action:Action"/>
       <rdfs:range rdf:resource="action:Capability"/>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="action:hasFailurecase">
-      <rdfs:domain rdf:resource="action:Action"/>
-      <rdfs:range rdf:resource="action:FailureCase"/>
     </owl:ObjectProperty>
 
     <owl:ObjectProperty rdf:about="action:hasModel">
@@ -50,6 +46,16 @@
     <owl:ObjectProperty rdf:about="action:outputModel">
       <rdfs:domain rdf:resource="action:Action"/>
       <rdfs:range rdf:resource="action:ExecutionModel"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="action:hasFailureCase">
+      <rdfs:domain rdf:resource="action:Action"/>
+      <rdfs:range rdf:resource="action:FailureCase"/>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="action:hasRecoveryBehaviour">
+      <rdfs:domain rdf:resource="action:FailureCase"/>
+      <rdfs:range rdf:resource="action:RecoveryBehaviour"/>
     </owl:ObjectProperty>
 
     <owl:ObjectProperty rdf:about="action:isInstanceOf">
@@ -118,13 +124,13 @@
 
     <!-- known failure cases -->
     <rdf:Description rdf:about="Place">
-        <action:hasFailurecase rdf:resource="KnockingObjectsOver"/>
+        <action:hasFailureCase rdf:resource="KnockingObjectsOver"/>
     </rdf:Description>
     <rdf:Description rdf:about="Place">
-        <action:hasFailurecase rdf:resource="ObjectFallsOver"/>
+        <action:hasFailureCase rdf:resource="ObjectFallsOver"/>
     </rdf:Description>
     <rdf:Description rdf:about="Place">
-        <action:hasFailurecase rdf:resource="UnreachableManipulationPose"/>
+        <action:hasFailureCase rdf:resource="UnreachableManipulationPose"/>
     </rdf:Description>
 
     <!-- execution models -->
@@ -181,10 +187,10 @@
 
     <!-- known failure cases -->
     <rdf:Description rdf:about="Throw">
-        <action:hasFailurecase rdf:resource="ObjectFallsOver"/>
+        <action:hasFailureCase rdf:resource="ObjectFallsOver"/>
     </rdf:Description>
     <rdf:Description rdf:about="Throw">
-        <action:hasFailurecase rdf:resource="UnreachableManipulationPose"/>
+        <action:hasFailureCase rdf:resource="UnreachableManipulationPose"/>
     </rdf:Description>
 
     <!-- execution models -->
@@ -217,13 +223,13 @@
 
     <!-- known failure cases -->
     <rdf:Description rdf:about="MoveBase">
-        <action:hasFailurecase rdf:resource="Collision"/>
+        <action:hasFailureCase rdf:resource="Collision"/>
     </rdf:Description>
     <rdf:Description rdf:about="MoveBase">
-        <action:hasFailurecase rdf:resource="KnockingObjectsOver"/>
+        <action:hasFailureCase rdf:resource="KnockingObjectsOver"/>
     </rdf:Description>
     <rdf:Description rdf:about="MoveBase">
-        <action:hasFailurecase rdf:resource="UnreachableNavigationPose"/>
+        <action:hasFailureCase rdf:resource="UnreachableNavigationPose"/>
     </rdf:Description>
 
     <!-- execution models -->
@@ -252,13 +258,13 @@
 
     <!-- known failure cases -->
     <rdf:Description rdf:about="Pick">
-        <action:hasFailurecase rdf:resource="KnockingObjectsOver"/>
+        <action:hasFailureCase rdf:resource="KnockingObjectsOver"/>
     </rdf:Description>
     <rdf:Description rdf:about="Pick">
-        <action:hasFailurecase rdf:resource="ObjectFallsOver"/>
+        <action:hasFailureCase rdf:resource="ObjectFallsOver"/>
     </rdf:Description>
     <rdf:Description rdf:about="Pick">
-        <action:hasFailurecase rdf:resource="UnreachableManipulationPose"/>
+        <action:hasFailureCase rdf:resource="UnreachableManipulationPose"/>
     </rdf:Description>
 
     <!-- execution models -->
